@@ -1,0 +1,70 @@
+{
+    "culturalMonuments": [
+        {
+            "id": 1,
+            "name": "Bəli"
+        },
+        {
+            "id": 0,
+            "name": "Xeyr"
+        }
+    ],
+    "typePerson": [
+        {
+            "id": 3,
+            "name": "Hamısı"
+        },
+        {
+            "id": 1,
+            "name": "Fiziki şəxs"
+        },
+        {
+            "id": 2,
+            "name": "Hüquqi şəxs"
+        }
+    ],
+    "typeProtocol": [
+        {
+            "id": 1,
+            "name": "Hüquqi şəxs"
+        },
+        {
+            "id": 2,
+            "name": "Fiziki şəxs"
+        }
+    ],
+    "childrenGroup": [
+        {
+            "id": 0,
+            "name": "Sərnişin daşıma"
+        },
+        {
+            "id": 1,
+            "name": "Uşaq qrupu daşıma"
+        }
+    ],
+    "hasOtherWorkerGroupRadio": [
+        {
+            "id": 1,
+            "name": "Bəli"
+        },
+        {
+            "id": 0,
+            "name": "Xeyr"
+        }
+    ],
+    "objectDesignation": [
+        {
+            "id": 1,
+            "name": "Yaşayış"
+        },
+        {
+            "id": 2,
+            "name": "Qeyri-yaşayış"
+        },
+        {
+            "id": 3,
+            "name": "Torpaq sahəsi"
+        }
+    ]
+}

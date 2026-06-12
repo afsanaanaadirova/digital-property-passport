@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Dövlət mülkiyyəti"
+    },
+    {
+        "id": 2,
+        "name": "Xüsusi mülkiyyəti"
+    },
+    {
+        "id": 3,
+        "name": "Bələdiyyə mülkiyyəti"
+    },
+    {
+        "id": 4,
+        "name": "Xarici mülkiyyət"
+    },
+    {
+        "id": 5,
+        "name": "Birgə (xarici qarışıq) mülkiyyət"
+    },
+    {
+        "id": 6,
+        "name": "Beynəlxalq təşkilatların mülkiyyəti"
+    }
+]

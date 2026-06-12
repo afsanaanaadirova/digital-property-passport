@@ -1,0 +1,30 @@
+##################################################################################################################
+workflow:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /fix\(.*\):\ |feat\(.*\):\ |perf\(.*\):\ / || $CI_COMMIT_BRANCH != "dev" 
+###################################################################################################################
+variables:
+  FQDN: redp.azsoftware.az
+  BUILD_FOLDER: dist/
+  CI_BUILD_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  BUILD_ARTIFACT_PATH: $CI_BUILDS_DIR/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/$BUILD_FOLDER
+  
+###################################################################################################################
+include:
+  - project: 'ayna-is/ayna-apps/templates/ci-files'
+    file: 'kaniko-release.yml'
+    ref: main
+  - project: 'ayna-is/ayna-apps/templates/ci-files'
+    file: 'kaniko-containerize-ui-env.yml'
+    ref: main
+  - project: 'ayna-is/ayna-apps/templates/ci-files'
+    file: 'gitlab-update.yml'
+    ref: main
+
+##################################################################################################################
+stages:
+  - release
+  - containerize
+  - update
+################################################################################################################
+##################################################################################################################

@@ -1,0 +1,20 @@
+{
+    "tables": [
+        {
+            "objectOwner": "Quluzade Vahid Aydın oğlu",
+            "fin": "5HYTR47",
+            "address": "Bakı ş., Yasamal r., Şərifzada 45",
+            "designation": "Yaşayış",
+            "ownershipType": "Xüsusi / Bələdiyyə",
+            "legalType": "Xüsusi / Bələdiyyə"
+        },
+        {
+            "objectOwner": "Məmmədov Namiq",
+            "fin": "2TBFGKJ",
+            "address": "Bakı ş., Yasamal r., Şərifzada 45",
+            "designation": "Qeyri-yaşayış",
+            "ownershipType": "Bələdiyyə / Bələdiyyə",
+            "legalType": "Bələdiyyə / Bələdiyyə"
+        }
+    ]
+}
