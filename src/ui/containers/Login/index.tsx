@@ -5,10 +5,10 @@ import Eye from "@svg/eye.svg?react";
 import Form from "@/ui/shared/Form";
 import Input from "@/ui/shared/Input";
 import Button from "@/ui/shared/Button"
-import LoginVm from "./login.vm";
+import LoginVM from "./login.vm";
 
 const Login = () => {
-    const { handleToggle, submitHandler,methods,showPassword,loginApi } = LoginVm()
+    const { handleToggle, submitHandler,methods,showPassword,loginApi } = LoginVM()
 
     return (
         <div className="flex justify-between items-center">

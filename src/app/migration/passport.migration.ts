@@ -1,8 +1,10 @@
 import { PassportDSO } from "@/data/dso/passport.dso";
 import { PassportByIdDTO, PassportGetAllDTO } from "@/data/dto/passport.dto";
 import {
+  PassportFormModel,
   PassportGetAllModel,
   PassportModel,
+  UpdatePassportRequest,
 } from "@/data/model/passport.model";
 import { PassportUpdateDSO } from "@/data/dso/passportUpdate.dso";
 
@@ -10,15 +12,14 @@ import { PassportUpdateDSO } from "@/data/dso/passportUpdate.dso";
 export const passportMigration = {
   async migrateToModel(dto: PassportByIdDTO): Promise<PassportModel> {
     const passport = dto.passport;
-    const options: {} = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "2-digit", year: "numeric" };
 
     const createDateFormatted = new Date(
       passport.createDate
     ).toLocaleDateString("tr-TR", options);
-    const issueDateFormatted = new Date(passport.issueDate).toLocaleDateString(
-      "tr-TR",
-      options
-    );
+    const issueDateFormatted = passport.issueDate
+      ? new Date(passport.issueDate).toLocaleDateString("tr-TR", options)
+      : "";
     return {
       personTypes: passport.estate.owners.map((person) => {
         return {
@@ -26,16 +27,16 @@ export const passportMigration = {
           ownerTypeId: person.ownerType.id,
           ownerTypeName: person.ownerType.name,
           contactNumber: person.contactNumber.replace("+994", "").trim(),
-          tin: person.ownerLegalDetail?.tin,
-          companyName: person.ownerLegalDetail?.companyName,
-          pin: person.ownerCitizenDetail?.pin,
-          fullname: person.ownerCitizenDetail?.fullname,
+          tin: person.ownerLegalDetail?.tin ?? "",
+          companyName: person.ownerLegalDetail?.companyName ?? "",
+          pin: person.ownerCitizenDetail?.pin ?? "",
+          fullname: person.ownerCitizenDetail?.fullname ?? "",
         };
       }),
       passpostId: passport.id,
       createdBy: passport.createdBy,
       createDate: createDateFormatted,
-      passportIssueDate: new Date(passport.issueDate),
+      passportIssueDate: passport.issueDate ? new Date(passport.issueDate) : null,
       passportIssueInfo: issueDateFormatted,
       passportNumber: passport.number,
       objectLocation: passport.estate.address,
@@ -106,7 +107,7 @@ export const passportMigration = {
       statusName: passport.passportStatuses[0].status.name,
     };
   },
-  migrateToDSO(model: PassportModel): PassportDSO {
+  migrateToDSO(model: PassportFormModel): PassportDSO {
     return {
       passport: {
         number: model.passportNumber,
@@ -114,7 +115,7 @@ export const passportMigration = {
           ? model.passportIssueDate.toISOString()
           : null,
         estate: {
-          owners: model.personTypes.map((person) => {
+          owners: model.personTypes.map((person: any) => {
             return {
               id: person.id,
               ownerTypeId: person.ownerTypeId,
@@ -177,12 +178,12 @@ export const passportMigration = {
         },
         passportFiles:
           model.passportFiles && model.passportFiles.length > 0
-            ? model.passportFiles.map((el) => {
+            ? model.passportFiles.map((el: any) => {
               return {
                 passportFileTypeId: el.id,
                 tokens:
                   el.files && el.files.length > 0
-                    ? el.files.map((file) => file.id.toString())
+                    ? el.files.map((file: any) => file.id.toString())
                     : [],
               };
             })
@@ -209,7 +210,7 @@ export const passportConfirmMigration = {
   },
 };
 export const updatePassportMigration = {
-  migrateToDSO: (data: PassportModel): PassportUpdateDSO => {
+  migrateToDSO: (data: UpdatePassportRequest): PassportUpdateDSO => {
     const existingFileIds = new Set(
       data.existingTokens.flatMap((token: any) =>
         token.files.map((file: any) => file.id)
@@ -219,7 +220,7 @@ export const updatePassportMigration = {
       .map((item) => ({
         ...item,
         files: item.files?.filter(
-          (file) =>
+          (file: any) =>
             !data.deleteIds.includes(file.id.toString() as string) &&
             !file.name &&
             !existingFileIds.has(file.id)
@@ -233,8 +234,8 @@ export const updatePassportMigration = {
       issueDate: data.passportIssueDate
         ? data.passportIssueDate.toISOString()
         : null,
+      ownerDeleteIds: data.ownerDeleteIds,
       estate: {
-        ownerDeleteIds: data.ownerDeleteIds,
         owners: data.personTypes.map((person) => {
           return {
             id: person.id ? person.id : 0,
@@ -308,7 +309,7 @@ export const updatePassportMigration = {
         newPassportFiles: filteredData.map((el) => {
           return {
             passportFileTypeId: el.id,
-            tokens: el.files.map((file) => file.id.toString()),
+            tokens: el.files.map((file: any) => file.id.toString()),
           };
         }),
       },
@@ -330,7 +331,7 @@ export const updatePassportMigration = {
   },
 };
 export const passportByAllMigration = {
-  migrateToModel(dto: PassportGetAllDTO): PassportGetAllModel[] {
+  migrateToModel(dto: PassportGetAllDTO): PassportGetAllModel {
     const passports = dto.pageResponse;
     const datas = passports.datas.map((passport) => ({
       id: passport.id,

@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PassportRepository from "../repositories/passportRepository";
-import { PassportModel } from "@/data/model/passport.model";
+import { PassportFormModel, UpdatePassportRequest } from "@/data/model/passport.model";
 import { RevalidateTagsEnum } from "@/data/enum/revalidate_tags.enum";
 import { snackbar } from "@/ui/shared/Snackbar";
 import { SnackbarStatusEnum } from "@/data/enum/snackbar_status.enum";
 
 export const useCreatePassport = () => {
   return useMutation({
-    mutationFn: (passport: PassportModel) => {
+    mutationFn: (passport: PassportFormModel) => {
       return PassportRepository.createPassport(passport);
     },
     onSuccess: (_data, _variables) => {
@@ -38,7 +38,7 @@ export const useGetAllPassport = (query: string) => {
 export const useUpdatePassport = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (passport: PassportModel) => {
+    mutationFn: (passport: UpdatePassportRequest) => {
       return PassportRepository.updatePassport(passport);
     },
     onSuccess: async (_data, _variables) => {

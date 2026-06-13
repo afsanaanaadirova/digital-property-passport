@@ -30,7 +30,7 @@ const FileInput = ({ name, label, passportFileTypeId, ...props }: Props) => {
   const blob = new Blob([mainValue?.token], { type: "image/png" });
   const testFile = new File([blob], mainValue?.name, {
     type: "image/png",
-    lastModified: new Date(),
+    lastModified: Date.now(),
   });
   useEffect(() => {
     if (mainValue?.name) {

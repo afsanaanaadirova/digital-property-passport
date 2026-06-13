@@ -8,7 +8,7 @@ import { snackbar } from "@/ui/shared/Snackbar";
 import { SnackbarStatusEnum } from "@/data/enum/snackbar_status.enum";
 
 
-const LoginVm = () => {
+const LoginVM = () => {
   const loginApi = login();
   const navigate = useNavigate();
 
@@ -46,4 +46,4 @@ const LoginVm = () => {
   }
 }
 
-export default LoginVm
+export default LoginVM

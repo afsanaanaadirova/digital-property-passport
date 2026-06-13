@@ -8,10 +8,10 @@ import { ObjectAttachmentsInfoFormProps } from "./object_attachments_info_form.t
 const ObjectAttachmentsInfoFormVM = ({ methods }: Pick<ObjectAttachmentsInfoFormProps, "methods">) => {
   const params = useParams()
   const { data: passportFileTypes, isLoading: passportFileTypesLoading } = usePassportFileTypes();
-  const { data: passportByid, isLoading: passportLoading } = useGetPassportById(Number(params.id));
+  const { data: passportByid } = useGetPassportById(Number(params.id));
   const [existingFileNames, setExistingFileNames] = useState<string[]>([]);
   const [uploadLoading, setUploadLoading] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadSuccess] = useState(false);
   const [deleteIds, setDeleteIds] = useState<string[]>([]);
 
   const updateFileNames = (newFileName: string, isDeleting: boolean) => {

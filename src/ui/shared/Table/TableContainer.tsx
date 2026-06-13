@@ -38,21 +38,20 @@ export const TableContainer = <T extends { [key: string]: any }>({
         ));
       case ETable.READY:
         return tableData?.map((d, index) => {
-          return(
-             <TR
-            key={index}
-            className={`even:bg-gray-25 border-gray-200 border-y relative last:border-0 text-14px400 h-16  ${
-              d.statusDto?.id === 3 && `text-error-600`
-            }`}
-          >
-            {tHeadData?.map((dataT, ind) => (
-              <TD key={ind} className="w-auto">
-                {dataT.render
-                  ? dataT.render(d, index)
-                  : getNestedValue(d, dataT.key)}
-              </TD>
-            ))}
-          </TR>
+          return (
+            <TR
+              key={index}
+              className={`even:bg-gray-25 border-gray-200 border-y relative last:border-0 text-14px400 h-16  ${d.statusDto?.id === 3 && `text-error-600`
+                }`}
+            >
+              {tHeadData?.map((dataT, ind) => (
+                <TD key={ind} className="w-auto">
+                  {dataT.render
+                    ? dataT.render(d, index)
+                    : getNestedValue(d, dataT.key)}
+                </TD>
+              ))}
+            </TR>
           )
         });
 
@@ -93,15 +92,21 @@ export const TableContainer = <T extends { [key: string]: any }>({
               {tableData && title}
               <table className="min-w-full text-left text-sm font-light table-auto">
                 <THead data={tHeadData} />
-                {loading ? (
-                  <div className="flex justify-center w-[900%] overflow-hidden p-6">
-                    <Box sx={{ display: "flex" }}>
-                      <CircularProgress />
-                    </Box>
-                  </div>
-                ) : (
-                  <tbody>{render()}</tbody>
-                )}
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={tHeadData.length}>
+                        <div className="flex justify-center p-6">
+                          <Box sx={{ display: "flex" }}>
+                            <CircularProgress />
+                          </Box>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    render()
+                  )}
+                </tbody>
               </table>
             </div>
             <div className="w-full flex justify-between">

@@ -1,7 +1,7 @@
 import { useSaleTransactionTypes } from "@/app/api/dropdowns.api";
 
 const ObjectOtherInfoFormVM = () => {
-  const { data: saleTransactionTypes, isLoading: saleTransactionTypesLoading } = useSaleTransactionTypes();
+  const { data: saleTransactionTypes } = useSaleTransactionTypes();
 
   return { saleTransactionTypes }
 }

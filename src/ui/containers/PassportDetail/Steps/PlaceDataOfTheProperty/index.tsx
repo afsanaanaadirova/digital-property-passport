@@ -54,8 +54,8 @@ const PlaceDataOfTheProperty = ({
   isLoading,
 }: AppealDetailsTabType) => {
   const loc = {
-    lat: passportByid?.location.lat,
-    lng: passportByid?.location.lng,
+    lat: passportByid?.location.lat ?? 0,
+    lng: passportByid?.location.lng ?? 0,
   };
 
   return (

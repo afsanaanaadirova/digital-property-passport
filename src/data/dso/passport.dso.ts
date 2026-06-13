@@ -4,18 +4,18 @@ export type PassportDSO = {
   passport: {
     id?: number;
     number: string | null| undefined;
-    issueDate: string;
+    issueDate: string | null;
     estate: {
-      owner: {
+      owners: {
         id: number;
         ownerTypeId: number;
-        contactNumber: string;
+        contactNumber: string | null;
         ownerLegalDetail?: {
           tin: string;
           companyName: string;
         } | null;
         ownerCitizenDetail?: {
-          pin: string;
+          pin: string | null;
           fullname: string;
         } | null;
       }[];
@@ -43,7 +43,7 @@ export type PassportDSO = {
         longitude: number| null | undefined;
         latitude: number| null | undefined;
         note?: string | null| undefined;
-      };
+      } | null;
       pricing: {
         estimatedLandSalePricePerSquareMeter: number| null| undefined;
         estimatedLandSalePrice: number| null| undefined;

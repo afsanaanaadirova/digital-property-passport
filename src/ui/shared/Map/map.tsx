@@ -14,102 +14,114 @@ const API_KEY = import.meta.env.VITE_GOOGLE_MAP_KEY as string;
 
 export type AutocompleteMode = { id: string; label: string };
 
-const autocompleteModes: Array<AutocompleteMode> = [
+const autocompleteModes: AutocompleteMode[] = [
   { id: "classic", label: "Google Autocomplete Widget" },
   { id: "custom", label: "Custom Build" },
   { id: "custom-hybrid", label: "Custom w/ Select Widget" },
 ];
 
-const MapComponent = ({
-  value,
-  onChange,
-  onAddressChange,
-}: {
-  value: string,
-  onChange: () => void,
-  onAddressChange: any
-}) => {
-  type LatLng = {
-    lat: number;
-    lng: number;
-  };
-  type MapType = {
-    name: string,
-    lat: string,
-    lng: string,
-  }
+type LatLng = {
+  lat: number;
+  lng: number;
+  name?: string;
+};
 
-  const [selectedAutocompleteMode] = useState<AutocompleteMode>(
-    autocompleteModes[0]
-  );
-  const [mapCenter, setMapCenter] = useState<MapType>();
-  const [selectedPlace, setSelectedPlace] = useState<LatLng>({
-    lat: 0,
-    lng: 0,
-  });
+type LocationValue = {
+  lat: number | null | undefined;
+  lng: number | null | undefined;
+  name?: string | null | undefined;
+};
 
+type Props = {
+  value: LocationValue | null;
+  onChange: (val: LatLng | null) => void;
+  onAddressChange?: (val: LatLng | null) => void;
+};
 
-  const [address, setAddress] = useState<string>("");
-  const [mapType, setMapType] = useState<string>("roadmap");
+const defaultLocation: LatLng = {
+  lat: 40.3898575,
+  lng: 49.7781437,
+};
+
+const MapComponent = ({ value, onChange, onAddressChange }: Props) => {
+  const [selectedAutocompleteMode] = useState(autocompleteModes[0]);
+
+  const [mapCenter, setMapCenter] = useState<LatLng>(defaultLocation);
+
+  const [selectedPlace, setSelectedPlace] = useState<LatLng | null>(null);
+
+  const [address, setAddress] = useState("");
+  const [mapType, setMapType] = useState<"roadmap" | "satellite">("roadmap");
 
   useEffect(() => {
-    if (value) {
-      setSelectedPlace(value);
-      setMapCenter({
-        name: address,
-        lat: value?.lat,
-        lng: value?.lng,
-      });
+    if (value && value.lat != null && value.lng != null) {
+      const latLng: LatLng = { lat: value.lat, lng: value.lng, name: value.name ?? undefined };
+      setSelectedPlace(latLng);
+      setMapCenter(latLng);
+      setAddress(value.name || "");
     }
   }, [value]);
 
   const handlePlaceSelect = (place: any) => {
-    setSelectedPlace(place.geometry.location);
-    setAddress(place.formatted_address || "");
+    if (!place?.geometry?.location) return;
+
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
     const name = place.formatted_address || "";
 
-    onAddressChange({
-      name,
-      lat: place.geometry.location?.lat(),
-      lng: place.geometry.location?.lng(),
-    });
-    setMapCenter({ name, lat: location?.lat, lng: location?.lng });
-  };
-  const handleMarkerDragEnd = (e: google.maps.MapMouseEvent) => {
-    const lat = e.latLng?.lat() ? e.latLng?.lat() : null;
-    const lng = e.latLng?.lng() ? e.latLng?.lng() : null
+    const newValue: LatLng = { lat, lng, name };
 
-    if (lat !== null && lat !== undefined && lng !== undefined && lng !== null) {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-        if (status === "OK" && results?.[0]) {
-          setAddress(results[0].formatted_address);
-          setMapCenter({ name: results[0].formatted_address, lat, lng });
-          onChange({ name: results[0].formatted_address, lat, lng });
-        }
-      });
-    }
+    setSelectedPlace(newValue);
+    setMapCenter(newValue);
+    setAddress(name);
+
+    onAddressChange?.(newValue);
   };
-  const defaultLocation = { lat: 40.3898575, lng: 49.7781437 };
+
+  const handleMarkerDragEnd = (e: google.maps.MapMouseEvent) => {
+    const lat = e.latLng?.lat();
+    const lng = e.latLng?.lng();
+
+    if (lat == null || lng == null) return;
+
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results?.[0]) {
+        const name = results[0].formatted_address;
+
+        const newValue: LatLng = { lat, lng, name };
+
+        setAddress(name);
+        setMapCenter(newValue);
+        setSelectedPlace(newValue);
+
+        onChange(newValue);
+        onAddressChange?.(newValue);
+      }
+    });
+  };
 
   const handleDelete = () => {
-    onAddressChange(null);
-    setSelectedPlace({
-      lat: 0,
-      lng: 0,
-    });
+    setSelectedPlace(null);
+    setAddress("");
+    setMapCenter(defaultLocation);
+    onAddressChange?.(null);
+    onChange(null);
   };
+
   return (
     <APIProvider apiKey={API_KEY}>
       <div className="relative">
         <CustomMapControl
-          value={value}
+          value={address || ""}
           controlPosition={ControlPosition.TOP}
           selectedAutocompleteMode={selectedAutocompleteMode}
           onPlaceSelect={handlePlaceSelect}
           address={address}
         />
-        {value?.lat !== undefined && (
+
+        {selectedPlace && (
           <div
             className="absolute right-12 top-4 border border-[#e3e8ef] bg-[#e3e8ef] p-2 rounded-full cursor-pointer"
             onClick={handleDelete}
@@ -121,40 +133,41 @@ const MapComponent = ({
         <div className="map-type-toggle flex justify-end gap-x-2 pb-3 pt-6">
           <button
             type="button"
-            className={`map-type-button border  bg-[#F5F5F5] text-black px-4 py-1 rounded-[10px] ${mapType === "roadmap" ? "active bg-[#eef2f6] " : ""
+            className={`border px-4 py-1 rounded-[10px] ${mapType === "roadmap" ? "bg-[#eef2f6]" : "bg-[#F5F5F5]"
               }`}
             onClick={() => setMapType("roadmap")}
           >
             Standart Xəritə
           </button>
+
           <button
             type="button"
-            className={`map-type-button border  bg-[#F5F5F5] text-black px-4 py-1 rounded-[10px] ${mapType === "satellite" ? "active bg-[#eef2f6]" : ""
+            className={`border px-4 py-1 rounded-[10px] ${mapType === "satellite" ? "bg-[#eef2f6]" : "bg-[#F5F5F5]"
               }`}
             onClick={() => setMapType("satellite")}
           >
             Satellite
           </button>
         </div>
+
         <Map
           defaultZoom={10}
-          center={mapCenter?.lat !== undefined ? mapCenter : defaultLocation}
+          center={mapCenter}
           gestureHandling="auto"
           keyboardShortcuts={false}
           disableDefaultUI={true}
           mapTypeId={mapType}
           className="w-full h-60"
         >
-
-          {
-            selectedPlace?.lat && selectedPlace?.lng && (
-              <Marker
-                position={selectedPlace}
-                draggable={true}
-                onDragEnd={handleMarkerDragEnd}
-              />
-            )}
+          {selectedPlace && (
+            <Marker
+              position={selectedPlace}
+              draggable={true}
+              onDragEnd={handleMarkerDragEnd}
+            />
+          )}
         </Map>
+
         <MapHandler place={selectedPlace} />
       </div>
     </APIProvider>

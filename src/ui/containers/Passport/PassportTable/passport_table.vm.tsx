@@ -106,16 +106,10 @@ export const PassportTableVM = () => {
       name: "",
       key: [""],
       className: "w-[5px]",
-      render: (rowData: any) => {
-        return (
-          <td
-            className={`${rowData.status === true
-              ? "before:absolute before:bg-[#BE9753] before:w-[3px] before:h-[40px] before:rounded-[2px] before:top-[10px] before:left-0"
-              : ""
-              }`}
-          ></td>
-        );
-      },
+      render: (rowData: any) =>
+        rowData.status === true ? (
+          <span className="absolute bg-[#BE9753] w-[3px] h-[40px] rounded-[2px] top-[10px] left-0" />
+        ) : null,
     },
     {
       id: 2,

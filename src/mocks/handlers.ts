@@ -106,9 +106,9 @@ export const handlers = [
     http.get("*/DropDown/Areas", () => {
         return HttpResponse.json({
             areas: [
-                { id: 1, name: "Zone A", description: "" },
-                { id: 2, name: "Zone B", description: "" },
-                { id: 3, name: "Zone C", description: "" },
+                { id: 1, name: "Zone A", description: "Description" },
+                { id: 2, name: "Zone B", description: "Description" },
+                { id: 3, name: "Zone C", description: "Description" },
             ]
         });
     }),
@@ -156,6 +156,40 @@ export const handlers = [
                 { id: 1, name: "Private" },
                 { id: 2, name: "Municipality" },
             ]
+        });
+    }),
+    http.get("*/DropDown/PassportFileTypes", () => {
+        return HttpResponse.json({
+            passportFileTypes: [
+                {
+                    id: 1,
+                    name: "PDF",
+                    fileAccept: ".pdf",
+                },
+                {
+                    id: 2,
+                    name: "Word",
+                    fileAccept: ".doc,.docx",
+                },
+                {
+                    id: 3,
+                    name: "Excel",
+                    fileAccept: ".xls,.xlsx",
+                },
+                {
+                    id: 4,
+                    name: "Image",
+                    fileAccept: ".jpg,.jpeg,.png",
+                },
+            ],
+        });
+    }),
+    http.get("*/DropDown/CulturalMonuments", () => {
+        return HttpResponse.json({
+            culturalMonuments: [
+                { id: 1, name: "UNESCO Site" },
+                { id: 2, name: "Historical Monument" },
+            ],
         });
     }),
 ];

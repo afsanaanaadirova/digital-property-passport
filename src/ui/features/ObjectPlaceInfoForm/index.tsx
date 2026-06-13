@@ -79,10 +79,10 @@ const ObjectPlaceInfoForm = ({ handleChangeField,
           <MapComponent
             value={value}
             onChange={onChange}
-            onAddressChange={(val: string) => (
-              onChange(val),
-              handleChangeField(val, "location", "attachments")
-            )}
+            onAddressChange={(val) => {
+              onChange(val);
+              handleChangeField(val?.name ?? "", "location", "attachments");
+            }}
           />
         )}
       />

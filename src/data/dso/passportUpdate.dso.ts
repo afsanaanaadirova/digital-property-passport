@@ -3,8 +3,8 @@ import { BaseType } from "../types/base.type";
 export type PassportUpdateDSO = {
   id: number;
   number: string | null | undefined;
-  issueDate: string;
-  ownerDeleteIds: number[];
+  issueDate: string | null;
+  ownerDeleteIds: string[];
   estate: {
     owners: {
       id: number;

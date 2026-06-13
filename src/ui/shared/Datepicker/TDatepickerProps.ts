@@ -3,7 +3,7 @@ import { FieldError } from "react-hook-form";
 export type TDatepickerProps = {
   dataError?: string;
   title?: string;
-  value: Date;
+  value: Date | null;
   error?: FieldError | undefined;
   className?: string;
   disabled?: boolean;

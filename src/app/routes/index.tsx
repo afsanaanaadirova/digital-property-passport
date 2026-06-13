@@ -6,7 +6,7 @@ import CreatePassport from "@/ui/pages/createPassport";
 import Passports from "@/ui/pages/passports/Passports";
 import PassportDetail from "@/ui/pages/passportDetail";
 
-const Login = lazy(() => import("@/ui/pages/login/Login"));
+const Login = lazy(() => import("@/ui/pages/auth/Login"));
 
 const AppRoutes = () => {
   const routesConfig: RouteObject[] = [
