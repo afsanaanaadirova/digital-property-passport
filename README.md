@@ -227,4 +227,3 @@ npm run preview   # Preview production build locally
 - **Adding a new mock endpoint:** Add a handler to `src/mocks/handlers.ts` following the existing pattern.
 - **Google Maps:** The map component (`src/ui/shared/Map/map.tsx`) requires a valid `VITE_GOOGLE_MAP_KEY`. Without it the map won't load but the form still works — location will just be `null`.
 - **File uploads:** In mock mode, file upload endpoints are not fully mocked. Tokens are generated client-side using `uuid`.
-=======
